@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helados d' Panda - ¡Los helados más tiernos y deliciosos!</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pandaDark: '#2D3142',
+                        pandaLight: '#F4F7F6',
+                        pandaGreen: '#A8DADC',
+                        pandaPink: '#FFB5A7',
+                        pandaMint: '#D8F3DC',
+                        pandaCream: '#FFE5D9',
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .custom-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="bg-pandaLight text-pandaDark antialiased selection:bg-pandaPink selection:text-white">
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-32 opacity-0 transition-all duration-300 bg-pandaDark text-white px-6 py-3 rounded-2xl shadow-xl flex items-center space-x-3">
+        <i id="toast-icon" class="fas fa-check-circle text-pandaGreen text-lg"></i>
+        <span id="toast-msg" class="font-medium text-sm">¡Acción realizada con éxito!</span>
+    </div>
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-pandaDark text-pandaCream text-xs md:text-sm py-2 px-4 text-center font-medium tracking-wide flex justify-center items-center space-x-2">
+        <i class="fas fa-paw text-pandaPink"></i>
+        <span>¡Envío gratis en pedidos superiores a $20.000 COP! 🐼 Disfruta la dulzura del bambú y el helado.</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-12 h-12 bg-pandaDark rounded-2xl flex items-center justify-center text-white text-2xl group-hover:scale-105 transition-transform">
+                    🐼
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight text-pandaDark block">Helados d' Panda</span>
+                    <span class="text-xs text-gray-400 font-medium block">¡Sabor tierno y refrescante!</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-sm text-gray-600">
+                <a href="#catalogo" class="hover:text-pandaDark transition-colors">Catálogo</a>
+                <a href="#nosotros" class="hover:text-pandaDark transition-colors">Nuestra Tienda</a>
+                <a href="#contacto" class="hover:text-pandaDark transition-colors">Contacto</a>
+            </nav>
+
+            <!-- Actions: Cart & Admin toggle -->
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleAdminModal()" class="text-gray-500 hover:text-pandaDark bg-gray-100 hover:bg-gray-200 p-2.5 rounded-xl transition-all text-sm font-medium flex items-center space-x-1" title="Panel Administrativo de Inventario">
+                    <i class="fas fa-lock text-xs"></i>
+                    <span class="hidden sm:inline">Admin</span>
+                </button>
+
+                <button onclick="toggleCart()" class="relative bg-pandaPink/20 hover:bg-pandaPink/30 text-pandaDark px-4 py-2.5 rounded-2xl transition-all flex items-center space-x-2 font-semibold">
+                    <i class="fas fa-shopping-bag text-pandaPink"></i>
+                    <span class="hidden sm:inline">Carrito</span>
+                    <span id="cart-counter" class="bg-pandaPink text-white text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-white to-pandaLight py-16 md:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6 text-center md:text-left">
+                <span class="inline-flex items-center space-x-2 bg-pandaCream text-pandaDark px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+                    <i class="fas fa-ice-cream text-pandaPink"></i>
+                    <span>Artesanales & Cremosos</span>
+                </span>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-pandaDark leading-tight">
+                    El helado que te hace sonreír como un <span class="text-pandaPink">Panda</span> 🐾
+                </h1>
+                <p class="text-gray-600 text-base sm:text-lg max-w-lg mx-auto md:mx-0">
+                    Descubre nuestra línea de helados artesanales elaborados con ingredientes naturales, texturas suaves y un toque de ternura inigualable. ¡Pídelo directo a tu puerta por WhatsApp!
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start space-y-3 sm:space-y-0 sm:space-x-4 pt-2">
+                    <a href="#catalogo" class="w-full sm:w-auto bg-pandaDark hover:bg-gray-800 text-white font-semibold px-8 py-4 rounded-2xl transition-all text-center shadow-lg hover:shadow-xl">
+                        Ver Catálogo de Helados
+                    </a>
+                    <a href="#contacto" class="w-full sm:w-auto bg-white hover:bg-gray-50 border border-gray-200 text-pandaDark font-semibold px-6 py-4 rounded-2xl transition-all text-center">
+                        Contáctanos
+                    </a>
+                </div>
+            </div>
+            <div class="relative flex justify-center">
+                <div class="absolute w-72 h-72 sm:w-96 sm:h-96 bg-pandaPink/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
+                <div class="relative w-full max-w-md bg-white rounded-3xl p-6 custom-shadow border border-gray-100">
+                    <img src="https://placehold.co/600x450/FFB5A7/FFFFFF?text=Helados+d'+Panda+Especial" alt="Helados d' Panda Destacado" class="rounded-2xl object-cover w-full h-64 sm:h-72 mb-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-lg text-pandaDark">Panda Bombón Supremo</h3>
+                            <p class="text-xs text-gray-500">Galleta crujiente y crema de avellana</p>
+                        </div>
+                        <span class="bg-pandaMint text-pandaDark font-extrabold text-sm px-3 py-1.5 rounded-xl">$7.500 COP</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catalog Section -->
+    <section id="catalogo" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+            <h2 class="text-3xl font-extrabold text-pandaDark">Nuestro Catálogo de Helados 🍨</h2>
+            <p class="text-gray-600 text-sm sm:text-base">Elige tus sabores favoritos y arma tu pedido con control de stock en tiempo real.</p>
+        </div>
+
+        <!-- Catalog Grid -->
+        <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Dynamic products will be injected here -->
+        </div>
+    </section>
+
+    <!-- Store Info / About Section -->
+    <section id="nosotros" class="py-16 bg-white border-y border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <div class="inline-block bg-pandaGreen/30 text-pandaDark px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+                    Nuestra Tienda Física y Virtual
+                </div>
+                <h2 class="text-3xl font-extrabold text-pandaDark">Sabor artesanal directo a tu hogar o tienda</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    En <strong class="text-pandaDark">Helados d' Panda</strong> nos especializamos en proveer no solo al cliente final, sino también con líneas especiales para tiendas, minimercados y eventos. Cada tarrina y paleta se prepara con rigurosos estándares de calidad.
+                </p>
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <div class="bg-pandaLight p-4 rounded-2xl">
+                        <i class="fas fa-store text-pandaPink text-xl mb-2"></i>
+                        <h4 class="font-bold text-sm text-pandaDark">Venta a Tiendas</h4>
+                        <p class="text-xs text-gray-500 mt-1">Precios especiales por volumen para comercios aliados.</p>
+                    </div>
+                    <div class="bg-pandaLight p-4 rounded-2xl">
+                        <i class="fas fa-shipping-fast text-pandaGreen text-xl mb-2"></i>
+                        <h4 class="font-bold text-sm text-pandaDark">Despachos Rápidos</h4>
+                        <p class="text-xs text-gray-500 mt-1">Garantizamos cadena de frío impecable en cada entrega.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="relative">
+                <img src="https://placehold.co/600x400/A8DADC/2D3142?text=Tienda+Helados+d'+Panda" alt="Tienda Helados d' Panda" class="rounded-3xl shadow-lg w-full object-cover h-80">
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Social Footer Section -->
+    <footer id="contacto" class="bg-pandaDark text-white pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-gray-800">
+            <div class="space-y-4 md:col-span-1">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-pandaPink rounded-xl flex items-center justify-center text-white text-xl font-bold">
+                        🐼
+                    </div>
+                    <span class="text-lg font-extrabold tracking-tight">Helados d' Panda</span>
+                </div>
+                <p class="text-gray-400 text-xs leading-relaxed">
+                    Endulzando momentos con la frescura y la ternura que solo un panda puede dar.
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                <h4 class="font-bold text-sm uppercase tracking-wider text-pandaGreen">Línea de Contacto</h4>
+                <ul class="space-y-2 text-sm text-gray-300">
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-envelope text-pandaPink"></i>
+                        <span>contacto@heladosdpanda.com</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fab fa-whatsapp text-pandaGreen"></i>
+                        <span>+57 300 123 4567</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-map-marker-alt text-pandaPink"></i>
+                        <span>Calle del Bambú #45-12, Ciudad</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="space-y-3">
+                <h4 class="font-bold text-sm uppercase tracking-wider text-pandaGreen">Redes Sociales</h4>
+                <div class="flex space-x-3 pt-1">
+                    <a href="https://instagram.com" target="_blank" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-pandaPink flex items-center justify-center text-white transition-colors" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://facebook.com" target="_blank" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-pandaPink flex items-center justify-center text-white transition-colors" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://tiktok.com" target="_blank" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-pandaPink flex items-center justify-center text-white transition-colors" title="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://whatsapp.com" target="_blank" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-pandaGreen hover:text-pandaDark flex items-center justify-center text-white transition-colors" title="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <h4 class="font-bold text-sm uppercase tracking-wider text-pandaGreen">Ventas Corporativas</h4>
+                <p class="text-xs text-gray-400">¿Tienes una tienda o minimercado? Contáctanos para abastecer tu local con nuestras neveras exclusivas.</p>
+                <a href="https://wa.me/573001234567?text=Hola,%20tengo%20una%20tienda%20y%20quiero%20vender%20Helados%20d'%20Panda" target="_blank" class="inline-block bg-pandaGreen text-pandaDark font-bold text-xs px-4 py-2.5 rounded-xl hover:bg-opacity-90 transition-all">
+                    Cotizar para Tienda <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500">
+            <p>&copy; 2026 Helados d' Panda. Todos los derechos reservados.</p>
+            <p class="mt-2 sm:mt-0">Desarrollado con amor 🐼</p>
+        </div>
+    </footer>
+
+    <!-- CART SIDEBAR DRAWER -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                <!-- Cart Header -->
+                <div class="p-6 bg-pandaLight border-b border-gray-100 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-shopping-bag text-pandaPink text-lg"></i>
+                        <h3 class="font-bold text-lg text-pandaDark">Tu Carrito de Helados</h3>
+                    </div>
+                    <button onclick="toggleCart()" class="text-gray-400 hover:text-pandaDark p-2 rounded-xl">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Items List -->
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-gray-100">
+                    <!-- Dynamic cart items -->
+                </div>
+
+                <!-- Cart Footer & Checkout Form -->
+                <div class="p-6 bg-pandaLight border-t border-gray-100 space-y-4">
+                    <div class="flex justify-between items-center text-base font-bold text-pandaDark">
+                        <span>Total del Pedido:</span>
+                        <span id="cart-total-price" class="text-xl text-pandaPink">$0 COP</span>
+                    </div>
+
+                    <!-- Checkout Form Inputs -->
+                    <div class="space-y-3 pt-2">
+                        <h4 class="font-semibold text-xs uppercase tracking-wider text-gray-500">Datos para el Envío y WhatsApp</h4>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Nombre Completo del Cliente</label>
+                            <input type="text" id="cust-name" placeholder="Ej. Camila Pérez" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-pandaDark">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Dirección Física de Entrega</label>
+                            <input type="text" id="cust-address" placeholder="Ej. Cra 15 # 80-20, Apto 302" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-pandaDark">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Dirección Electrónica (Correo)</label>
+                            <input type="email" id="cust-email" placeholder="Ej. cliente@correo.com" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-pandaDark">
+                        </div>
+                    </div>
+
+                    <!-- WhatsApp Checkout Button -->
+                    <button onclick="checkoutWhatsApp()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3.5 px-4 rounded-2xl shadow-lg transition-all flex items-center justify-center space-x-2 text-sm">
+                        <i class="fab fa-whatsapp text-lg"></i>
+                        <span>Enviar Pedido por WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN INVENTORY MODAL -->
+    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="toggleAdminModal()"></div>
+        <div class="relative bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh]">
+            <!-- Admin Header -->
+            <div class="p-6 bg-pandaDark text-white flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-shield-alt text-pandaPink text-xl"></i>
+                    <div>
+                        <h3 class="font-bold text-lg">Panel Administrativo de Inventario</h3>
+                        <p class="text-xs text-gray-300">Uso exclusivo administrativo - Gestión automática de stock</p>
+                    </div>
+                </div>
+                <button onclick="toggleAdminModal()" class="text-gray-300 hover:text-white p-2">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Admin Password Verification Gate -->
+            <div id="admin-auth-screen" class="p-8 space-y-4">
+                <p class="text-sm text-gray-600">Introduce la contraseña de administrador para acceder al manejo del recurso de inventario:</p>
+                <div class="flex space-x-3">
+                    <input type="password" id="admin-pass-input" placeholder="Contraseña (ej: panda123)" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-pandaDark">
+                    <button onclick="verifyAdminPassword()" class="bg-pandaDark text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-gray-800 transition-colors">Entrar</button>
+                </div>
+                <p class="text-xs text-gray-400">Pista por defecto: <code class="bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">panda123</code></p>
+            </div>
+
+            <!-- Admin Inventory Management Panel (Hidden until login) -->
+            <div id="admin-panel-screen" class="p-6 overflow-y-auto space-y-6 hidden flex-1">
+                <div class="flex justify-between items-center">
+                    <h4 class="font-bold text-pandaDark text-sm uppercase tracking-wide">Inventario Actual en Base de Datos</h4>
+                    <span class="text-xs bg-pandaMint text-pandaDark px-3 py-1 rounded-full font-bold">Automatizado</span>
+                </div>
+
+                <div class="border border-gray-100 rounded-2xl overflow-hidden">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-500 font-semibold text-xs border-b border-gray-100">
+                                <th class="p-4">Producto</th>
+                                <th class="p-4">Precio ($)</th>
+                                <th class="p-4">Stock Actual</th>
+                                <th class="p-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-inventory-list" class="divide-y divide-gray-100">
+                            <!-- Injected rows -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-pandaLight p-4 rounded-2xl space-y-3">
+                    <h5 class="font-bold text-xs text-pandaDark uppercase">Agregar Nuevo Producto al Catálogo</h5>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="new-p-name" placeholder="Nombre del Helado" class="px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs">
+                        <input type="number" id="new-p-price" placeholder="Precio (COP)" class="px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs">
+                        <input type="number" id="new-p-stock" placeholder="Cantidad de Stock" class="px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs">
+                        <input type="text" id="new-p-desc" placeholder="Breve descripción" class="px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs">
+                    </div>
+                    <button onclick="addNewProduct()" class="w-full bg-pandaDark hover:bg-gray-800 text-white font-bold py-2.5 rounded-xl text-xs transition-colors">
+                        <i class="fas fa-plus mr-1"></i> Registrar Producto en Inventario
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APPLICATION SCRIPT -->
+    <script>
+        // Initial Inventory & Catalog Database
+        let products = [
+            {
+                id: 1,
+                name: "Panda Bombón Supremo",
+                desc: "Helado artesanal de vainilla con centro de chocolate crujiente y galleta.",
+                price: 7500,
+                stock: 15,
+                image: "https://placehold.co/400x300/FFB5A7/FFFFFF?text=Bomb%C3%B3n+Panda"
+            },
+            {
+                id: 2,
+                name: "Bambú Menta Choc",
+                desc: "Refrescante helado de menta natural con trocitos de chocolate oscuro.",
+                price: 6800,
+                stock: 8,
+                image: "https://placehold.co/400x300/A8DADC/2D3142?text=Menta+Choc"
+            },
+            {
+                id: 3,
+                name: "Tarrina Familiar D' Panda",
+                desc: "Presentación de 1 Litro para tiendas y familias, surtido de 3 sabores.",
+                price: 28000,
+                stock: 5,
+                image: "https://placehold.co/400x300/D8F3DC/2D3142?text=Tarrina+1L"
+            },
+            {
+                id: 4,
+                name: "Paleta Frutal de Fresa Silvestre",
+                desc: "Paleta 100% natural a base de fresas frescas seleccionadas.",
+                price: 4500,
+                stock: 20,
+                image: "https://placehold.co/400x300/FFE5D9/2D3142?text=Paleta+Fresa"
+            },
+            {
+                id: 5,
+                name: "Cono Trufa Negra Panda",
+                desc: "Doble porción de helado de chocolate belga en cono waffle artesanal.",
+                price: 8500,
+                stock: 10,
+                image: "https://placehold.co/400x300/2D3142/FFFFFF?text=Trufa+Negra"
+            },
+            {
+                id: 6,
+                name: "Pack Tienda x12 Paletas",
+                desc: "Línea dirigida a tiendas y minimercados con surtido mixto.",
+                price: 45000,
+                stock: 4,
+                image: "https://placehold.co/400x300/FFB5A7/2D3142?text=Pack+Tiendas"
+            }
+        ];
+
+        // Cart state
+        let cart = [];
+
+        // Helper: Toast Notifications
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-msg');
+            const icon = document.getElementById('toast-icon');
+
+            msg.textContent = message;
+            if(isError) {
+                icon.className = 'fas fa-exclamation-circle text-red-400 text-lg';
+            } else {
+                icon.className = 'fas fa-check-circle text-pandaGreen text-lg';
+            }
+
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 3000);
+        }
+
+        // Render Catalog Grid
+        function renderCatalog() {
+            const grid = document.getElementById('catalog-grid');
+            grid.innerHTML = '';
+
+            products.forEach(p => {
+                const isOutOfStock = p.stock <= 0;
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-3xl p-6 custom-shadow border border-gray-100 flex flex-col justify-between transition-all hover:shadow-xl ${isOutOfStock ? 'opacity-75' : ''}`;
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="relative mb-4 overflow-hidden rounded-2xl">
+                            <img src="${p.image}" alt="${p.name}" class="w-full h-48 object-cover transform hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/400x300/F4F7F6/2D3142?text=Helado'">
+                            <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-pandaDark text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                Stock: ${p.stock} un.
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-lg text-pandaDark mb-1">${p.name}</h3>
+                        <p class="text-xs text-gray-500 mb-4 line-clamp-2">${p.desc}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div>
+                            <span class="text-xs text-gray-400 block font-medium">Precio</span>
+                            <span class="text-base font-extrabold text-pandaDark">$${p.price.toLocaleString()} COP</span>
+                        </div>
+                        <button onclick="addToCart(${p.id})" ${isOutOfStock ? 'disabled' : ''} class="${isOutOfStock ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-pandaDark hover:bg-gray-800 text-white shadow-md'} px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center space-x-2">
+                            <i class="fas fa-cart-plus"></i>
+                            <span>${isOutOfStock ? 'Agotado' : 'Añadir'}</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Add to Cart with inventory stock check
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const cartItem = cart.find(item => item.id === productId);
+            const currentQtyInCart = cartItem ? cartItem.qty : 0;
+
+            if (currentQtyInCart + 1 > product.stock) {
+                showToast(`¡Inventario insuficiente! Solo hay ${product.stock} unidades disponibles.`, true);
+                return;
+            }
+
+            if (cartItem) {
+                cartItem.qty += 1;
+            } else {
+                cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
+            }
+
+            updateCartUI();
+            showToast(`Añadido al carrito: ${product.name}`);
+        }
+
+        // Update Cart UI
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const counter = document.getElementById('cart-counter');
+            const totalPriceEl = document.getElementById('cart-total-price');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            counter.textContent = totalItems;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-gray-400 space-y-2">
+                        <i class="fas fa-shopping-basket text-4xl text-gray-300"></i>
+                        <p class="text-sm font-medium">Tu carrito está vacío</p>
+                    </div>
+                `;
+                totalPriceEl.textContent = '$0 COP';
+                return;
+            }
+
+            container.innerHTML = '';
+            let totalSum = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                totalSum += itemTotal;
+
+                const div = document.createElement('div');
+                div.className = 'py-3 flex items-center justify-between';
+                div.innerHTML = `
+                    <div class="flex-1 pr-2">
+                        <h5 class="font-bold text-sm text-pandaDark">${item.name}</h5>
+                        <p class="text-xs text-gray-500">$${item.price.toLocaleString()} x ${item.qty}</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="font-bold text-sm text-pandaDark">$${itemTotal.toLocaleString()}</span>
+                        <div class="flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
+                            <button onclick="changeCartQty(${item.id}, -1)" class="w-6 h-6 bg-white rounded flex items-center justify-center text-xs font-bold hover:bg-gray-200">-</button>
+                            <span class="text-xs font-bold px-1">${item.qty}</span>
+                            <button onclick="changeCartQty(${item.id}, 1)" class="w-6 h-6 bg-white rounded flex items-center justify-center text-xs font-bold hover:bg-gray-200">+</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            totalPriceEl.textContent = `$${totalSum.toLocaleString()} COP`;
+        }
+
+        // Change Cart Item Quantity with Stock Verification
+        function changeCartQty(productId, delta) {
+            const product = products.find(p => p.id === productId);
+            const cartItem = cart.find(item => item.id === productId);
+
+            if (!cartItem) return;
+
+            const newQty = cartItem.qty + delta;
+
+            if (newQty > product.stock) {
+                showToast(`¡Stock máximo alcanzado (${product.stock} disponibles)!`, true);
+                return;
+            }
+
+            if (newQty <= 0) {
+                cart = cart.filter(item => item.id !== productId);
+            } else {
+                cartItem.qty = newQty;
+            }
+
+            updateCartUI();
+        }
+
+        // Toggle Cart Drawer
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        // Toggle Admin Modal
+        function toggleAdminModal() {
+            const modal = document.getElementById('admin-modal');
+            modal.classList.toggle('hidden');
+            // Reset to auth screen on close
+            if(modal.classList.contains('hidden')) {
+                document.getElementById('admin-auth-screen').classList.remove('hidden');
+                document.getElementById('admin-panel-screen').classList.add('hidden');
+                document.getElementById('admin-pass-input').value = '';
+            }
+        }
+
+        // Verify Admin Password
+        function verifyAdminPassword() {
+            const pass = document.getElementById('admin-pass-input').value;
+            if(pass === 'panda123') {
+                document.getElementById('admin-auth-screen').classList.add('hidden');
+                document.getElementById('admin-panel-screen').classList.remove('hidden');
+                renderAdminInventory();
+                showToast('¡Acceso administrativo concedido!');
+            } else {
+                showToast('Contraseña incorrecta. Intenta de nuevo (panda123)', true);
+            }
+        }
+
+        // Render Admin Inventory Table
+        function renderAdminInventory() {
+            const tbody = document.getElementById('admin-inventory-list');
+            tbody.innerHTML = '';
+
+            products.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50';
+                tr.innerHTML = `
+                    <td class="p-4 font-semibold text-pandaDark flex items-center space-x-2">
+                        <img src="${p.image}" class="w-8 h-8 rounded-lg object-cover" onerror="this.src='https://placehold.co/50x50/F4F7F6/2D3142?text=P'">
+                        <span>${p.name}</span>
+                    </td>
+                    <td class="p-4 text-gray-600">$${p.price.toLocaleString()}</td>
+                    <td class="p-4">
+                        <input type="number" id="stock-input-${p.id}" value="${p.stock}" min="0" class="w-20 px-2 py-1 border border-gray-200 rounded-lg text-xs font-bold text-center bg-white">
+                    </td>
+                    <td class="p-4 text-center space-x-2">
+                        <button onclick="updateStock(${p.id})" class="bg-pandaGreen text-pandaDark font-bold px-3 py-1.5 rounded-xl text-xs hover:bg-opacity-80 transition-colors" title="Actualizar Stock">
+                            <i class="fas fa-save"></i>
+                        </button>
+                        <button onclick="deleteProduct(${p.id})" class="bg-red-100 text-red-500 font-bold px-3 py-1.5 rounded-xl text-xs hover:bg-red-200 transition-colors" title="Eliminar producto">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Automated Inventory Update from Admin Panel
+        function updateStock(productId) {
+            const input = document.getElementById(`stock-input-${productId}`);
+            const newStock = parseInt(input.value);
+
+            if (isNaN(newStock) || newStock < 0) {
+                showToast('Por favor introduce un valor de stock válido.', true);
+                return;
+            }
+
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                product.stock = newStock;
+                renderCatalog();
+                renderAdminInventory();
+                showToast(`Stock de "${product.name}" actualizado a ${newStock} unidades.`);
+            }
+        }
+
+        // Add New Product from Admin Panel
+        function addNewProduct() {
+            const name = document.getElementById('new-p-name').value.trim();
+            const price = parseFloat(document.getElementById('new-p-price').value);
+            const stock = parseInt(document.getElementById('new-p-stock').value);
+            const desc = document.getElementById('new-p-desc').value.trim();
+
+            if (!name || isNaN(price) || isNaN(stock)) {
+                showToast('Por favor completa todos los campos obligatorios del producto.', true);
+                return;
+            }
+
+            const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+            products.push({
+                id: newId,
+                name: name,
+                desc: desc || 'Delicioso helado artesanal d\' Panda.',
+                price: price,
+                stock: stock,
+                image: `https://placehold.co/400x300/FFB5A7/FFFFFF?text=${encodeURIComponent(name)}`
+            });
+
+            // Clear inputs
+            document.getElementById('new-p-name').value = '';
+            document.getElementById('new-p-price').value = '';
+            document.getElementById('new-p-stock').value = '';
+            document.getElementById('new-p-desc').value = '';
+
+            renderCatalog();
+            renderAdminInventory();
+            showToast('¡Producto agregado al inventario con éxito!');
+        }
+
+        // Delete Product from Inventory
+        function deleteProduct(productId) {
+            products = products.filter(p => p.id !== productId);
+            renderCatalog();
+            renderAdminInventory();
+            showToast('Producto eliminado del inventario.');
+        }
+
+        // Automated WhatsApp Checkout Generation
+        function checkoutWhatsApp() {
+            if (cart.length === 0) {
+                showToast('Tu carrito está vacío. Agrega helados para continuar.', true);
+                return;
+            }
+
+            const name = document.getElementById('cust-name').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+            const email = document.getElementById('cust-email').value.trim();
+
+            if (!name || !address || !email) {
+                showToast('Por favor completa Nombre, Dirección física y Dirección electrónica.', true);
+                return;
+            }
+
+            // Build structured order message
+            let message = `🐼 *NUEVO PEDIDO - HELADOS D' PANDA* 🍦\n\n`;
+            message += `👤 *Cliente:* ${name}\n`;
+            message += `📍 *Dirección Física:* ${address}\n`;
+            message += `📧 *Dirección Electrónica:* ${email}\n\n`;
+            message += `📋 *DESGLOSE DEL PEDIDO:*\n`;
+
+            let total = 0;
+            cart.forEach((item, index) => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                message += `${index + 1}. ${item.name} x ${item.qty} - $${subtotal.toLocaleString()} COP\n`;
+            });
+
+            message += `\n💰 *TOTAL A PAGAR: $${total.toLocaleString()} COP*\n\n`;
+            message += `¡Quedo atento a la confirmación de mi pedido! Gracias 🐾`;
+
+            // Automatically deduct stock from automated inventory upon checkout confirmation
+            cart.forEach(cartItem => {
+                const prod = products.find(p => p.id === cartItem.id);
+                if (prod) {
+                    prod.stock = Math.max(0, prod.stock - cartItem.qty);
+                }
+            });
+
+            // Clear cart and re-render
+            cart = [];
+            updateCartUI();
+            renderCatalog();
+            toggleCart();
+
+            // Open WhatsApp with prefilled text
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/573001234567?text=${encodedMessage}`;
+            
+            showToast('¡Pedido generado! Abriendo WhatsApp...');
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 1000);
+        }
+
+        // Initialize application on window load
+        window.onload = function() {
+            renderCatalog();
+            updateCartUI();
+        };
+    </script>
+</body>
+</html>
